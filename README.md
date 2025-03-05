@@ -1,16 +1,40 @@
-# assignment_3
+# Product CRUD App
 
-A new Flutter project.
+This is a Flutter application that implements a basic CRUD (Create, Read, Update, Delete) functionality for managing products using a `ProductController`.
 
-## Getting Started
+## Features
+- Add new products
+- Update existing products
+- Delete products
+- Fetch and display products in a ListView
 
-This project is a starting point for a Flutter application.
+## Technologies Used
+- Flutter
+- Dart
 
-A few resources to get you started if this is your first Flutter project:
+### Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/santorasu/exam_week_assignment_3.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd assignment_3
+   ```
+3. Get the dependencies:
+   ```sh
+   flutter pub get
+   ```
+4. Run the application:
+   ```sh
+   flutter run
+   ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Usage
+1. Click on the **➕ Floating Action Button** to add a new product.
+2. Fill in the product details and click **Add Product**.
+3. To update a product, click the **Edit (✏️) button** next to the product.
+4. To delete a product, click the **Delete (🗑️) button**.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+

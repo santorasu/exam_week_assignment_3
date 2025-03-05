@@ -1,4 +1,5 @@
 import 'package:assignment_3/module-13/product_controller.dart';
+import 'package:assignment_3/module-13/widget/product_card.dart';
 import 'package:flutter/material.dart';
 
 class Module13Class1Crud extends StatefulWidget {
@@ -29,8 +30,9 @@ class _Module13Class1CrudState extends State<Module13Class1Crud> {
     productNameController.text = name ?? '';
     productQuantityController.text = qty != null ? qty.toString() : '0';
     productImageController.text = img ?? '';
-    productUnitPriceController.text = unitPrice.toString() ?? '0';
-    productTotalPriceController.text = totalPrice.toString() ?? '0';
+
+    productUnitPriceController.text =unitPrice  != null ?  unitPrice.toString() : '0';
+    productTotalPriceController.text =totalPrice !=null ? totalPrice.toString() : '0';
     showDialog(
       context: context,
       builder:
@@ -126,74 +128,49 @@ class _Module13Class1CrudState extends State<Module13Class1Crud> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
         appBar: AppBar(title: const Text("Products")),
-        body: ListView.builder(
+        body: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.6
+          ),
           itemCount: productController.products.length,
           itemBuilder: (context, index) {
             var product = productController.products[index];
-            return Card(
-              elevation: 4,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: ListTile(
-                // leading: Image.network(
-                //   products['Img'],
-                //   width: 150,
-                //   fit: BoxFit.contain,
-                // ),
-                title: Text(
-                  product.productName.toString(),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Price: \$ ${product.unitPrice} | Quantity: ${product.qty}\nTotal Price: ${product.totalPrice}",
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed:
-                          () => productDialog(
-                            id: product.sId,
-                            name: product.productName,
-                            img: product.img,
-                            unitPrice: product.unitPrice,
-                            totalPrice: product.totalPrice,
-                          ),
-                      icon: Icon(Icons.edit),
+            return ProductCard(product: product, onEdit: ()=> productDialog(
+              id: product.sId,
+              name: product.productName,
+              img: product.img,
+              qty: product.qty,
+              unitPrice: product.unitPrice,
+              totalPrice: product.totalPrice,
+            ), onDelete: (){
+              productController
+                  .deleteProducts(product.sId.toString())
+                  .then((value) {
+                if (value) {
+                  setState(() {
+                    fetchData();
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Product Deleted"),
+                      duration: Duration(seconds: 2),
                     ),
-                    SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () {
-
-                          productController
-                              .deleteProducts(product.sId.toString())
-                              .then((value) {
-                                if (value) {
-                                  setState(() {
-                                    fetchData();
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Product Deleted"),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Please try again.."),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                              });
-                      },
-                      icon: Icon(Icons.delete, color: Colors.red),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please try again.."),
+                      duration: Duration(seconds: 2),
                     ),
-                  ],
-                ),
-              ),
-            );
+                  );
+                }
+              });
+            },);
           },
         ),
         floatingActionButton: FloatingActionButton(

@@ -21,7 +21,6 @@ class _Module13Class1CrudState extends State<Module13Class1Crud> {
     int? totalPrice,
   }) {
     TextEditingController productNameController = TextEditingController();
-    TextEditingController productCodeController = TextEditingController();
     TextEditingController productQuantityController = TextEditingController();
     TextEditingController productImageController = TextEditingController();
     TextEditingController productUnitPriceController = TextEditingController();
@@ -30,96 +29,94 @@ class _Module13Class1CrudState extends State<Module13Class1Crud> {
     productNameController.text = name ?? '';
     productQuantityController.text = qty != null ? qty.toString() : '0';
     productImageController.text = img ?? '';
+    productUnitPriceController.text = unitPrice != null ? unitPrice.toString() : '0';
+    productTotalPriceController.text = totalPrice != null ? totalPrice.toString() : '0';
 
-    productUnitPriceController.text =unitPrice  != null ?  unitPrice.toString() : '0';
-    productTotalPriceController.text =totalPrice !=null ? totalPrice.toString() : '0';
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(id == null ? "Add Products" : "Update Product"),
-            content: Column(
+      builder: (context) => AlertDialog(
+        title: Text(id == null ? "Add Products" : "Update Product"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: productNameController,
+              decoration: InputDecoration(labelText: 'Product Name'),
+            ),
+            TextField(
+              controller: productImageController,
+              decoration: InputDecoration(labelText: 'Product Image'),
+            ),
+            TextField(
+              controller: productQuantityController,
+              decoration: InputDecoration(labelText: 'Product Quantity'),
+            ),
+            TextField(
+              controller: productUnitPriceController,
+              decoration: InputDecoration(labelText: 'Product Unit Price'),
+            ),
+            TextField(
+              controller: productTotalPriceController,
+              decoration: InputDecoration(labelText: 'Total Price'),
+            ),
+            SizedBox(height: 10),
+            Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextField(
-                  controller: productNameController,
-                  decoration: InputDecoration(labelText: 'Product Name'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'),
                 ),
+                SizedBox(width: 5),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.white
+                  ),
 
-                TextField(
-                  controller: productImageController,
-                  decoration: InputDecoration(labelText: 'Product Image'),
-                ),
-                TextField(
-                  controller: productQuantityController,
-                  decoration: InputDecoration(labelText: 'Product Quantity'),
-                ),
-                TextField(
-                  controller: productUnitPriceController,
-                  decoration: InputDecoration(labelText: 'Product Unit Price'),
-                ),
-                TextField(
-                  controller: productTotalPriceController,
-                  decoration: InputDecoration(labelText: 'Total Price'),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('Close'),
-                    ),
-                    SizedBox(width: 5),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (id == null) {
-                          productController.createProduct(
-                            productNameController.text,
-                            productImageController.text,
-                            int.parse(productQuantityController.text),
-                            int.parse(productUnitPriceController.text),
-                            int.parse(productTotalPriceController.text),
-                          );
-                        } else {
-                          productController.updateProduct(
-                            id,
-                            productNameController.text,
-                            productImageController.text,
-                            int.parse(productQuantityController.text),
-                            int.parse(productUnitPriceController.text),
-                            int.parse(productTotalPriceController.text),
-                          );
-                        }
-
-                        fetchData();
-                        Navigator.pop(context);
-                        setState(() {});
-                      },
-                      child: Text(
-                        id == null ? "Add Products" : "Update Product",
-                      ),
-                    ),
-                  ],
+                  onPressed: () async {
+                    if (id == null) {
+                      await productController.createProduct(
+                        productNameController.text,
+                        productImageController.text,
+                        int.parse(productQuantityController.text),
+                        int.parse(productUnitPriceController.text),
+                        int.parse(productTotalPriceController.text),
+                      );
+                    } else {
+                      await productController.updateProduct(
+                        id,
+                        productNameController.text,
+                        productImageController.text,
+                        int.parse(productQuantityController.text),
+                        int.parse(productUnitPriceController.text),
+                        int.parse(productTotalPriceController.text),
+                      );
+                    }
+                    await fetchData();
+                    Navigator.pop(context);
+                    setState(() {});
+                  },
+                  child: Text(id == null ? "Add Products" : "Update Product"),
                 ),
               ],
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 
   Future<void> fetchData() async {
     await productController.fetchProducts();
-    print(productController.products.length);
     setState(() {});
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchData();
   }
@@ -133,44 +130,43 @@ class _Module13Class1CrudState extends State<Module13Class1Crud> {
         body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.6
-          ),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 0.6),
           itemCount: productController.products.length,
           itemBuilder: (context, index) {
             var product = productController.products[index];
-            return ProductCard(product: product, onEdit: ()=> productDialog(
-              id: product.sId,
-              name: product.productName,
-              img: product.img,
-              qty: product.qty,
-              unitPrice: product.unitPrice,
-              totalPrice: product.totalPrice,
-            ), onDelete: (){
-              productController
-                  .deleteProducts(product.sId.toString())
-                  .then((value) {
-                if (value) {
-                  setState(() {
+            return ProductCard(
+              product: product,
+              onEdit: () => productDialog(
+                id: product.sId,
+                name: product.productName,
+                img: product.img,
+                qty: product.qty,
+                unitPrice: product.unitPrice,
+                totalPrice: product.totalPrice,
+              ),
+              onDelete: () {
+                productController.deleteProducts(product.sId.toString()).then((value) {
+                  if (value) {
                     fetchData();
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Product Deleted"),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Please try again.."),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
-              });
-            },);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Product Deleted"),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Please try again.."),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                });
+              },
+            );
           },
         ),
         floatingActionButton: FloatingActionButton(

@@ -12,18 +12,10 @@ This is a Flutter application that implements a basic CRUD (Create, Read, Update
 - Flutter
 - Dart
 
-## Getting Started
-### Prerequisites
-Ensure you have Flutter installed on your machine. You can check by running:
-```sh
-flutter --version
-```
-If Flutter is not installed, follow the [official Flutter installation guide](https://flutter.dev/docs/get-started/install).
-
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone <repository_url>
+   git clone https://github.com/santorasu/exam_week_assignment_3.git
    ```
 2. Navigate to the project directory:
    ```sh
@@ -38,24 +30,11 @@ If Flutter is not installed, follow the [official Flutter installation guide](ht
    flutter run
    ```
 
-## Code Structure
-- **`Module13Class1Crud`**: A stateful widget that manages the UI and CRUD operations.
-- **`ProductController`**: Handles fetching, creating, updating, and deleting products.
-- **`productDialog`**: Displays a dialog to add or update products.
-- **`fetchData`**: Fetches and updates the product list.
-- **`ListView.builder`**: Renders the list of products.
-
 ## Usage
 1. Click on the **➕ Floating Action Button** to add a new product.
 2. Fill in the product details and click **Add Product**.
 3. To update a product, click the **Edit (✏️) button** next to the product.
 4. To delete a product, click the **Delete (🗑️) button**.
 
-## Future Enhancements
-- Implement a backend API for product storage.
-- Add image upload functionality.
-- Improve UI/UX with better styling and animations.
 
-## License
-This project is licensed under the MIT License.
 
